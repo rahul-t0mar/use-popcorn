@@ -62,7 +62,7 @@ export default function App() {
         <NumberOfSearch movies={movies} />
       </Navbar>
       <Main>
-        {/*            //This is passing children
+
         <Box>
           <SearchedMoviesList movies={movies} />
         </Box>
@@ -114,10 +114,6 @@ function Main({ children }) {
   return <main className="main">{children}</main>;
 }
 
-//This box uses children
-
-{
-  /*      //This box uses children 
 
 function Box({ children }) {
   const [isOpen, setIsOpen] = useState(true);
