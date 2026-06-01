@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 
 const average = (arr) =>
@@ -13,12 +13,10 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState("");
   //Use state can also take a callback function as initial value and it is called only once.
-  const [watched, setWatched] = useState(function (){
-    const savedData = localStorage.getItem("watched")
-    return savedData? JSON.parse(savedData):[];
+  const [watched, setWatched] = useState(function () {
+    const savedData = localStorage.getItem("watched");
+    return savedData ? JSON.parse(savedData) : [];
   });
-
-
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -152,6 +150,12 @@ function Logo() {
 }
 
 function SearchBox({ query, setQuery }) {
+  const inputEle = useRef(null);
+
+  useEffect(function () {
+    inputEle.current.focus();
+  }, []);
+  //inputEle.current behaves as a DOM which is joined to  this input element by the ref property then we can apply DOM functions with it.
   return (
     <input
       className="search"
@@ -159,6 +163,7 @@ function SearchBox({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEle}
     />
   );
 }
