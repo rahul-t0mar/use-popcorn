@@ -55,10 +55,6 @@ body {
   max-width: 42rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
-<<<<<<< HEAD
-  overflow: auto;
-=======
->>>>>>> 79784e8 (Added the delete button to reviewed movies by the user)
   position: relative;
 }
 
@@ -142,10 +138,6 @@ body {
 .list {
   list-style: none;
   padding: 0.8rem 0;
-<<<<<<< HEAD
-  overflow: auto;
-=======
->>>>>>> 79784e8 (Added the delete button to reviewed movies by the user)
 }
 
 .list-watched {
