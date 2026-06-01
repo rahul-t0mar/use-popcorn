@@ -12,10 +12,10 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState("");
+  //Use state can also take a callback function as initial value and it is called only once.
   const [watched, setWatched] = useState(function (){
     const savedData = localStorage.getItem("watched")
-    return JSON.parse(savedData);
-    //Use state can also take a callback function as initial value and it is called only once.
+    return savedData? JSON.parse(savedData):[];
   });
 
 
