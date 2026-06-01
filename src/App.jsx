@@ -153,7 +153,14 @@ function SearchBox({ query, setQuery }) {
   const inputEle = useRef(null);
 
   useEffect(function () {
-    inputEle.current.focus();
+    function callback(e) {
+      if (e.code === "Enter") {
+        inputEle.current.focus();
+        setQuery("");
+      }
+    }
+    document.addEventListener("keydown", callback);
+    return () => document.addEventListener("keydown", callback);
   }, []);
   //inputEle.current behaves as a DOM which is joined to  this input element by the ref property then we can apply DOM functions with it.
   return (
