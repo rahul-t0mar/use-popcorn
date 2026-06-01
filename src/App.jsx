@@ -9,10 +9,16 @@ const API_KEY = "bf2f443d";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState("");
+  const [watched, setWatched] = useState(function (){
+    const savedData = localStorage.getItem("watched")
+    return JSON.parse(savedData);
+    //Use state can also take a callback function as initial value and it is called only once.
+  });
+
+
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -29,6 +35,14 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
+
+  //Effect to create save the watched movies data to the localStorage of the browser.
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched],
+  );
 
   useEffect(
     function () {
