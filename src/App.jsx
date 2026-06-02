@@ -152,16 +152,21 @@ function Logo() {
 function SearchBox({ query, setQuery }) {
   const inputEle = useRef(null);
 
-  useEffect(function () {
-    function callback(e) {
-      if (e.code === "Enter") {
-        inputEle.current.focus();
-        setQuery("");
+  useEffect(
+    function () {
+      function callback(e) {
+        if (document.activeElement === inputEle.current) return;
+
+        if (e.code === "Enter") {
+          inputEle.current.focus();
+          setQuery("");
+        }
       }
-    }
-    document.addEventListener("keydown", callback);
-    return () => document.addEventListener("keydown", callback);
-  }, []);
+      document.addEventListener("keydown", callback);
+      return () => document.addEventListener("keydown", callback);
+    },
+    [setQuery],
+  );
   //inputEle.current behaves as a DOM which is joined to  this input element by the ref property then we can apply DOM functions with it.
   return (
     <input
@@ -233,6 +238,14 @@ function SelectedMovieList({
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      if (userRating) countRef.current = countRef.current + 1;
+    },
+    [userRating],
+  );
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const watchedUserRating = watched.find(
