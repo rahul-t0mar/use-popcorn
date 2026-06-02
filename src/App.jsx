@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -11,12 +12,11 @@ export default function App() {
   const [query, setQuery] = useState("");
   
   const [selectedId, setSelectedId] = useState(null);
+
+  const [watched, setWatched] = useLocalStorageState([], "watched")
   
   //Use state can also take a callback function as initial value and it is called only once.
-  const [watched, setWatched] = useState(function () {
-    const savedData = localStorage.getItem("watched");
-    return savedData ? JSON.parse(savedData) : [];
-  });
+  
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -35,12 +35,7 @@ export default function App() {
   }
 
   //Effect to create save the watched movies data to the localStorage of the browser.
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched],
-  );
+
 
  const {movies, isLoading, error} = useMovies(query, handleSelectMovie);
 
@@ -382,7 +377,7 @@ function MovieSummary({ watched }) {
         </p>
         <p>
           <span>⏳</span>
-          <span>{avgRuntime} min</span>
+          <span>{avgRuntime.toFixed(2)} min</span>
         </p>
       </div>
     </div>

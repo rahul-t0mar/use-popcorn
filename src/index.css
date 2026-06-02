@@ -56,6 +56,7 @@ body {
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   position: relative;
+  overflow: auto;
 }
 
 .loader {
@@ -138,6 +139,7 @@ body {
 .list {
   list-style: none;
   padding: 0.8rem 0;
+  overflow: auto;
 }
 
 .list-watched {
