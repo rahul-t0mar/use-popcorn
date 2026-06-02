@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -8,10 +9,9 @@ const API_KEY = "bf2f443d";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  
   const [selectedId, setSelectedId] = useState(null);
-  const [error, setError] = useState("");
+  
   //Use state can also take a callback function as initial value and it is called only once.
   const [watched, setWatched] = useState(function () {
     const savedData = localStorage.getItem("watched");
@@ -42,46 +42,7 @@ export default function App() {
     [watched],
   );
 
-  useEffect(
-    function () {
-      const controller = new AbortController();
-      async function searchMovies() {
-        try {
-          setIsLoading(true);
-          setError("");
-          const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
-            { signal: controller.signal },
-          );
-
-          if (!res.ok)
-            throw new Error("Something went wrong with fetching movies");
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found!!");
-
-          setMovies(data.Search);
-        } catch (err) {
-          console.error(err);
-          if (err.name !== "AbortError") {
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      if (!query.length) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-      searchMovies();
-
-      return function () {
-        controller.abort();
-      };
-    },
-    [query],
-  );
+ const {movies, isLoading, error} = useMovies(query, handleSelectMovie);
 
   return (
     <>
