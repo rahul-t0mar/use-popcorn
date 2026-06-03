@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
+import { useKey } from "./useKey";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -10,13 +11,12 @@ const API_KEY = "bf2f443d";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  
+
   const [selectedId, setSelectedId] = useState(null);
 
-  const [watched, setWatched] = useLocalStorageState([], "watched")
-  
+  const [watched, setWatched] = useLocalStorageState([], "watched");
+
   //Use state can also take a callback function as initial value and it is called only once.
-  
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -34,10 +34,7 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
-  //Effect to create save the watched movies data to the localStorage of the browser.
-
-
- const {movies, isLoading, error} = useMovies(query, handleSelectMovie);
+  const { movies, isLoading, error } = useMovies(query, handleSelectMovie);
 
   return (
     <>
@@ -108,21 +105,16 @@ function Logo() {
 function SearchBox({ query, setQuery }) {
   const inputEle = useRef(null);
 
-  useEffect(
-    function () {
-      function callback(e) {
-        if (document.activeElement === inputEle.current) return;
+  useEffect(() => {
+    inputEle.current?.focus();
+  }, []); 
 
-        if (e.code === "Enter") {
-          inputEle.current.focus();
-          setQuery("");
-        }
-      }
-      document.addEventListener("keydown", callback);
-      return () => document.addEventListener("keydown", callback);
-    },
-    [setQuery],
-  );
+  useKey("Enter", function () {
+    if (document.activeElement === inputEle.current) return;
+    inputEle.current.focus();
+    setQuery("");
+  });
+
   //inputEle.current behaves as a DOM which is joined to  this input element by the ref property then we can apply DOM functions with it.
   return (
     <input
@@ -234,6 +226,9 @@ function SelectedMovieList({
     onAddWatched(newWatchedMovie);
     closeSelected();
   }
+
+  useKey("Escape", closeSelected);
+
   useEffect(
     function () {
       async function getMovieDetails() {
